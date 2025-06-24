@@ -1,0 +1,194 @@
+<?xml version="1.0"?>
+<domain name="drugs" author="vito nicola losavio">
+	<entities>
+        <!-- 
+            Entity Person rappresenta una persona che soffre di una malattia e che assume farmaci.
+            L'attributo id è obbligatorio e rappresenta un identificativo univoco per la persona.
+            Gli altri attributi in questo contesto sono facoltativi, in quanto potrebbero non essere
+            forniti dall'utente per motivi di privacy.
+        -->
+        <entity name="Person">
+            <attribute name="id" mandatory="true" display="true" datatype="string"/>
+            <attribute name="name" mandatory="false" display="false" datatype="string"/>
+            <attribute name="surname" mandatory="false" display="false" datatype="string"/>
+            <attribute name="gender" mandatory="false" datatype="select">
+                <value name="M"/>
+                <value name="F"/>
+            </attribute>
+            <attribute name="bornIn" mandatory="false" datatype="entity"/>
+            <attribute name="birthDate" mandatory="false" datatype="date"/>
+            <attribute name="bloodGroup" mandatory="false" datatype="select"> <!-- Gruppo sanguigno -->
+                <value name="A+"/>
+                <value name="A-"/>
+                <value name="B+"/>
+                <value name="B-"/>
+                <value name="AB+" />
+                <value name="AB-" />
+                <value name="0+" />
+                <value name="0-" />
+            </attribute>
+        </entity>
+        <!-- 
+            Entity Drugs rappresenta un farmaco. 
+            L'attributo drug rappresenta il nome del farmaco.
+            Gli altri attributi sono facoltativi e possono essere utilizzati per fornire ulteriori informazioni sul farmaco.
+            L'attributo activeIngredient rappresenta il principio attivo del farmaco.
+            L'attributo atc rappresenta il codice ATC del farmaco, che è un sistema di classificazione dei farmaci.
+            L'attributo company rappresenta la casa farmaceutica che produce il farmaco.
+            L'attributo usage rappresenta la via di somministrazione del farmaco.
+            L'attributo equivalenceGroupCode rappresenta il codice di equivalenza del farmaco, 
+            che può essere utilizzato per identificare farmaci equivalenti.
+        -->
+        <entity name="Drugs">
+            <attribute name="drug" mandatory="true" display="true" datatype="string"/>
+            <attribute name="activeIngredient" mandatory="true" datatype="string"/>
+            <attribute name="atc" mandatory="false" datatype="string"/>
+            <attribute name="company" mandatory="false" datatype="string"/>
+            <attribute name="usage" mandatory="false" datatype="select">
+                <value name="Oral"/>                <!-- Via orale -->
+                <value name="Sublingual"/>          <!-- Via sublinguale -->
+                <value name="Intravenous"/>         <!-- Via endovenosa -->
+                <value name="Intramuscular"/>       <!-- Via intramuscolare -->
+                <value name="Parenteral"/>          <!-- Via parenterale -->
+                <value name="ParenteralAndOral"/>   <!-- Via parenterale e orale -->
+                <value name="Rectal"/>              <!-- Via rettale -->
+            </attribute>
+            <attribute name="equivalenceGroupCode" mandatory="false" datatype="string"/>
+            <attribute name="notes" mandatory="false" datatype="text"/>
+        </entity>
+
+        <!-- 
+            Entity Disease rappresenta una malattia. 
+            L'attributo name rappresenta il nome della malattia.
+            Gli altri attributi sono facoltativi e possono essere utilizzati per fornire ulteriori informazioni sulla malattia.
+        -->
+        <entity name="Disease">
+            <attribute name="id" mandatory="true" display="true" datatype="string"/>
+            <attribute name="name" mandatory="false" display="true" datatype="string"/>
+            <attribute name="description" mandatory="false" datatype="string"/>
+            <attribute name="symptoms" mandatory="false" datatype="string"/>  <!-- Sintomi -->
+            <attribute name="causes" mandatory="false" datatype="string"/> 
+            <attribute name="category" mandatory="false" datatype="select">
+                <value name="Infectious"/>         <!-- Malattie causate da agenti patogeni -->
+                <value name="Genetic"/>            <!-- Malattie ereditarie o da mutazione -->
+                <value name="Autoimmune"/>         <!-- Malattie da attacco immunitario al self -->
+                <value name="Metabolic"/>          <!-- Es. diabete, dislipidemie -->
+                <value name="Neoplastic"/>         <!-- Tumori maligni e benigni -->
+                <value name="Degenerative"/>       <!-- Es. Alzheimer, Parkinson -->
+                <value name="Psychiatric"/>        <!-- Disturbi mentali -->
+                <value name="Traumatic"/>          <!-- Lesioni fisiche, incidenti -->
+                <value name="Cardiovascular"/>     <!-- Es. ipertensione, infarto -->
+                <value name="Respiratory"/>        <!-- Es. BPCO, asma -->
+                <value name="Gastrointestinal"/>   <!-- Es. colite, epatiti, ulcere -->
+                <value name="Neurological"/>       <!-- Es. epilessia, sclerosi multipla -->
+                <value name="Dermatological"/>     <!-- Es. psoriasi, dermatiti -->
+                <value name="Endocrine"/>          <!-- Es. ipotiroidismo, diabete tipo 1 -->
+                <value name="Hematologic"/>        <!-- Es. anemia, leucemia -->
+                <value name="Musculoskeletal"/>    <!-- Es. artrite, osteoporosi -->
+                <value name="Urological"/>         <!-- Es. cistite, prostatite -->
+                <value name="Ophthalmologic"/>     <!-- Es. glaucoma, cataratta -->
+                <value name="Otolaryngologic"/>    <!-- Orecchio, naso, gola -->
+                <value name="Reproductive"/>       <!-- Infertilità, endometriosi -->
+                <value name="Pediatric"/>          <!-- Malattie tipiche dell'età evolutiva -->
+                <value name="Geriatric"/>          <!-- Condizioni specifiche dell'anziano -->
+                <value name="Gynecological"/>      <!-- Ginecologiche -->
+                <value name="Dental"/>             <!-- Dentali -->
+                <value name="Allergic"/>           <!-- Allergiche -->
+            </attribute>
+            <attribute name="chronic" mandatory="false" datatype="boolean"/>
+            <attribute name="rare" mandatory="false" datatype="boolean"/>
+            <attribute name="hereditary" mandatory="false" datatype="boolean"/>
+        </entity>
+	</entities>
+	<relationships>
+        <!-- Relazione tra la medicina e la persona che prende -->
+        <relationship name="prescribedTo" inverse="hasPrescription">
+            <reference subject="Drugs" object="Person"/>
+            <attribute name="startDate" mandatory="false" datatype="date"/>
+            <attribute name="endDate" mandatory="false" datatype="date"/>
+            <attribute name="dosage" mandatory="false" datatype="string"/>
+            <attribute name="frequency" mandatory="false" datatype="string"/>
+        </relationship>
+
+        <!-- Relazione tra la persona e la medicina che assume -->
+        <relationship name="hasPrescription" inverse="prescribedTo">
+            <reference subject="Person" object="Drugs"/>
+            <attribute name="startDate" mandatory="false" datatype="date"/>
+            <attribute name="endDate" mandatory="false" datatype="date"/>
+            <attribute name="dosage" mandatory="false" datatype="string"/>
+            <attribute name="frequency" mandatory="false" datatype="string"/>
+
+        </relationship>
+
+        <!-- Relazione tra persona (paziente) e la malattia che ha -->
+        <relationship name="hasDisease"  inverse="hasPatient">
+            <reference subject="Person" object="Disease"/>
+            <attribute name="diagnosisDate" mandatory="false" datatype="date"/>
+            <attribute name="status" mandatory="false" datatype="select">
+                <value name="Active"/>
+                <value name="Inactive"/>
+                <value name="Remission"/>
+                <value name="Cured"/>
+                <value name="Terminal"/>
+                <value name="Chronic"/>
+                <value name="Acute"/>
+                <value name="Relapsing"/>
+                <value name="Progressive"/>
+                <value name="Stable"/>
+                <value name="Advanced"/>
+            </attribute>
+        </relationship>
+
+        <relationship name="hasPatient"  inverse="hasDisease">
+            <reference subject="Person" object="Disease"/>
+            <attribute name="diagnosisDate" mandatory="false" datatype="date"/>
+            <attribute name="status" mandatory="false" datatype="select">
+                <value name="Active"/>
+                <value name="Inactive"/>
+                <value name="Remission"/>
+                <value name="Cured"/>
+                <value name="Terminal"/>
+                <value name="Chronic"/>
+                <value name="Acute"/>
+                <value name="Relapsing"/>
+                <value name="Progressive"/>
+                <value name="Stable"/>
+                <value name="Advanced"/>
+            </attribute>
+        </relationship>
+
+        <!-- Relazione tra medicina e la malattia che cura -->
+        <relationship name="treatedWith" inverse="treats">
+            <reference subject="Disease" object="Drugs"/>
+            <attribute name="standardOfCare" mandatory="false" datatype="boolean"/>
+        </relationship>
+        <!-- Relazione tra il farmaco e la mallatia per il quale è indicata -->
+        <relationship name="treats" inverse="treatedWith">
+            <reference subject="Drugs" object="Disease"/>
+            <attribute name="standardOfCare" mandatory="false" datatype="boolean"/>
+        </relationship>
+
+        <!-- Relazione tra farmaco con farmaco in quanto potrebbero essere incompatibili tra loro -->
+        <relationship name="contraindicatedFor" inverse="contraindicates">
+            <reference subject="Drugs" object="Disease"/>
+            <attribute name="severity" mandatory="false" datatype="select">
+                <value name="Mild"/>
+                <value name="Moderate"/> 
+                <value name="Severe"/>
+                <value name="Critical"/>
+            </attribute>
+            <attribute name="notes" mandatory="false" datatype="text"/>
+        </relationship>
+
+        <relationship name="contraindicates" inverse="contraindicatedFor">
+            <reference subject="Drugs" object="Disease"/>
+            <attribute name="severity" mandatory="false" datatype="select">
+                <value name="Mild"/>
+                <value name="Moderate"/>
+                <value name="Severe"/>
+                <value name="Critical"/>
+            </attribute>
+            <attribute name="notes" mandatory="false" datatype="text"/>
+        </relationship>
+	</relationships>
+</domain>
