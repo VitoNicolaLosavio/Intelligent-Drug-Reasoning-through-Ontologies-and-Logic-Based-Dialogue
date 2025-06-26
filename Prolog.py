@@ -59,7 +59,7 @@ def get_disease_id_by_name(name: str):
     :param name: The name of the disease (as stored in disease_data/9)
     :return: The matching disease ID or None
     """
-    query = f'disease_data(DiseaseID, '{name}', _, _, _, _, _, _, _)'
+    query = f"disease_data(DiseaseID, '{name}', _, _, _, _, _, _, _)"
     results = list(prolog.query(query))
     return results[0]["DiseaseID"] if results else None
 
