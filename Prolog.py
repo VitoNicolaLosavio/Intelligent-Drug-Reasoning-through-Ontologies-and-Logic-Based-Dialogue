@@ -103,7 +103,7 @@ def get_safe_prescriptions(person_id: str, drug_id: str):
 
     q = f"safe_for({person_id}, {drug_id})"
     try:
-        return list(prolog.query(q))
+        return bool(list(prolog.query(q)))
     except:
         return None
 
