@@ -152,7 +152,10 @@ def personalized_check_applicable_treatment(message: str, person_id: str):
         result = get_safe_prescriptions(person_id=person_id, drug_id=response)
     except NotPresentInKBExceptions:
         result = "Farmaco o malattia non presente nella knowledge base"
-
+    if result:
+        result = "È possibile prescrivere il farmaco"
+    else:
+        result = "Non è sicuro prescrivere il farmaco"
     return result
 
 def personalized_check_un_applicable_treatment(message: str, person_id: str):
